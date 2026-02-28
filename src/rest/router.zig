@@ -1,12 +1,20 @@
 const std = @import("std");
 
 pub const RouteVtable = struct {
-    controller_action: *const fn () []const u8,
+    controller_action: *const fn (allocator: std.mem.Allocator) []const u8,
+};
+
+pub const RouteType = enum {
+    Page,
+    Json,
+    Plain,
 };
 
 pub const RouteDefinition = struct {
     name: []const u8,
+    relative_path: []const u8 = undefined,
     vtable: RouteVtable,
+    route_type: RouteType = RouteType.Plain,
 };
 
 pub const Router = struct {
