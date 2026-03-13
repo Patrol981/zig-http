@@ -16,7 +16,7 @@ pub const HttpHeader = struct {
         origin: []const u8,
         host: []const u8,
         requested_resource_name: []const u8,
-        requested_resource_type: FetchType,
+        requested_resource_type: FetchType = .unknown,
 
         pub fn containsHost(info: HeaderInfo, str: []const u8) bool {
             const result = std.mem.find(u8, info.host, str);

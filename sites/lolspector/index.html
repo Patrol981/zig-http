@@ -1,0 +1,25 @@
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="./script.js"> </script>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('partial', (url) => ({
+        html: '',
+        async init() {
+          this.html = await fetch(url).then(r => r.text());
+        }
+      }))
+    });
+  </script>
+</head>
+<body>
+  <div class="nav">
+    <img src="icons/user-solid-full.svg">
+    <i class="fa-solid fa-user"></i>
+    <div x-data="partial('navbar.html')" x-html="html"></div>
+  </div>
+</body>
+</html>

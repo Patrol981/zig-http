@@ -1,7 +1,11 @@
 const std = @import("std");
 
+const Server = @import("server.zig").Server;
+
 pub const RouteVtable = struct {
-    controller_action: *const fn (allocator: std.mem.Allocator) []const u8,
+    controller_action: *const fn (
+        server: *Server,
+    ) []const u8,
 };
 
 pub const RouteType = enum {
@@ -12,7 +16,7 @@ pub const RouteType = enum {
 
 pub const RouteDefinition = struct {
     name: []const u8,
-    relative_path: []const u8 = undefined,
+    relative_path: ?[]const u8 = null,
     vtable: RouteVtable,
     route_type: RouteType = RouteType.Plain,
 };
