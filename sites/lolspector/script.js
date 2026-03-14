@@ -1,7 +1,48 @@
-hello();
+document.addEventListener('alpine:init', () => {
+  Alpine.data('partial', (url) => ({
+    html: '',
+    async init() {
+      await this.loadPage(url);
 
-function hello() {
-  console.log('hello');
-}
+      this.$watch('$store.current_route', async (next) => {
+        await this.loadPage(next);
+      })
+    },
 
-function test() {}
+    async loadPage(url) {
+      this.html = await fetch(url, {
+        headers: {
+          'Accept': 'text/html',
+          'X-Requested-With': 'fetch-partial'
+        }
+      }).then(r => r.text());
+    }
+  }))
+
+  Alpine.data('navbar', (url) => ({
+    html: '',
+    async init() {
+      this.html = await fetch(url, {
+        headers: {
+          'Accept': 'text/html',
+          'X-Requested-With': 'fetch-partial'
+        }
+      }).then(r => r.text());
+    }
+  }))
+
+  Alpine.data('clash', () => ({
+    clash_schedules: [],
+    async init() {
+      console.log('[clash] init component');
+
+      const data = await fetch("http://localhost:8000/clash/schedule");
+      const json = await data.json();
+
+      this.clash_schedules = json;
+      console.log(this.clash_schedules);
+    }
+  }));
+
+  Alpine.store('current_route', 'clash.html')
+});

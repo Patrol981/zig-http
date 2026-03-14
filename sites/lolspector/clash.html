@@ -1,0 +1,19 @@
+<style>
+  .clash {
+
+  }
+
+  .clash .items {
+    
+  }
+</style>
+
+<div class="clash" x-data="clash">
+  <h1>Clash schedule</h1>
+
+  <div class="items">
+    <template x-for="schedule in clash_schedules">
+      <h2 x-text="schedule.nameKey"></h2>
+    </template>
+  </div>
+</div>

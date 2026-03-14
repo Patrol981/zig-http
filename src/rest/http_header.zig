@@ -12,11 +12,17 @@ pub const HttpHeader = struct {
         unknown,
     };
 
+    pub const RequestedWith = enum {
+        fetchPartial,
+        none,
+    };
+
     pub const HeaderInfo = struct {
         origin: []const u8,
         host: []const u8,
         requested_resource_name: []const u8,
         requested_resource_type: FetchType = .unknown,
+        requested_with: RequestedWith = .none,
 
         pub fn containsHost(info: HeaderInfo, str: []const u8) bool {
             const result = std.mem.find(u8, info.host, str);
@@ -41,6 +47,7 @@ pub const HttpHeader = struct {
             .host = "",
             .requested_resource_name = "",
             .requested_resource_type = FetchType.unknown,
+            .requested_with = RequestedWith.none,
         };
 
         var iterator = req.iterateHeaders();
@@ -53,8 +60,16 @@ pub const HttpHeader = struct {
             } else if (std.ascii.eqlIgnoreCase(header.name, "sec-fetch-dest")) {
                 inline for (std.meta.fields(FetchType)) |field| {
                     if (std.mem.eql(u8, header.value, field.name)) {
-                        header_info.requested_resource_type = @field(FetchType, field.name);
+                        header_info.requested_resource_type = @field(
+                            FetchType,
+                            field.name,
+                        );
                     }
+                }
+            } else if (std.ascii.eqlIgnoreCase(header.name, "X-Requested-With")) {
+                std.log.debug("[X-Requested-With] {s}", .{header.value});
+                if (std.mem.eql(u8, header.value, "fetch-partial")) {
+                    header_info.requested_with = .fetchPartial;
                 }
             }
         }

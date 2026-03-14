@@ -4,22 +4,40 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="./script.js"> </script>
 
-  <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.data('partial', (url) => ({
-        html: '',
-        async init() {
-          this.html = await fetch(url).then(r => r.text());
-        }
-      }))
-    });
-  </script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .legal {
+      position: absolute;
+      bottom: 0;
+
+      width: 90vw;
+
+      color: #778DA9;
+
+      margin-left: 2vw;
+      margin-rigt: 2vw;
+    }
+  </style>
 </head>
 <body>
   <div class="nav">
-    <img src="icons/user-solid-full.svg">
-    <i class="fa-solid fa-user"></i>
-    <div x-data="partial('navbar.html')" x-html="html"></div>
+    <div x-data="navbar('navbar.html')" x-html="html"></div>
   </div>
+  <div class="content">
+    <div x-data="partial($store.current_route)" x-html="html"></div>
+    <div class="legal">
+      <p>
+        lolspector isn't endorsed by Riot Games and doesn't reflect the views or opinions of 
+        Riot Games or anyone officially involved in producing or managing Riot Games 
+        properties. Riot Games, and all associated properties are trademarks or registered
+        trademarks of Riot Games, Inc.
+      </p>
+    </div>
+  </div>
+  
 </body>
 </html>

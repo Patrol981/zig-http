@@ -48,20 +48,26 @@ pub fn defineRoutes(router: *root.router.Router) void {
         .name = "/lolspector",
         .relative_path = "../../sites/lolspector",
         .route_type = .Page,
-        .vtable = .{ .controller_action = lolspector },
+        .vtable = .{
+            .controller_action = lolspector,
+        },
     };
 
-    const hello_riot_route: root.router.RouteDefinition = .{
-        .name = "/hello_riot",
+    const clash_get_schedule_route: root.router.RouteDefinition = .{
+        .name = "/clash/schedule",
         .route_type = .Json,
-        .vtable = .{ .controller_action = helloRiot },
+        .vtable = .{
+            .controller_action = clashGetSchedule,
+        },
     };
 
     router.addRoute(hello_page_route);
     router.addRoute(hello_json_route);
     router.addRoute(hello_plain_route);
+
+    // riot api related
     router.addRoute(lolspector_route);
-    router.addRoute(hello_riot_route);
+    router.addRoute(clash_get_schedule_route);
 }
 
 pub fn lolspector(server: *root.server.Server) []const u8 {
@@ -130,7 +136,7 @@ pub fn helloJson(server: *root.server.Server) []const u8 {
     ;
 }
 
-pub fn helloRiot(server: *root.server.Server) []const u8 {
+pub fn clashGetSchedule(server: *root.server.Server) []const u8 {
     const io = server.thread_io.io();
     const allocator = server.mem_allocator;
 
@@ -143,6 +149,10 @@ pub fn helloRiot(server: *root.server.Server) []const u8 {
     var body: std.Io.Writer.Allocating = .init(allocator);
     defer body.deinit();
 
+    std.log.info(
+        "[clash] fetching with api_key: {s}",
+        .{server.environment.config.API_KEY},
+    );
     _ = client.fetch(.{
         .method = .GET,
         .location = .{ .url = "https://euw1.api.riotgames.com/lol/clash/v1/tournaments" },

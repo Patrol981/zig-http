@@ -225,6 +225,7 @@ pub const Server = struct {
                     http_header.FetchType.script,
                     http_header.FetchType.image,
                     http_header.FetchType.style,
+                    http_header.FetchType.document,
                     => {
                         var target_route: ?*router.RouteDefinition = null;
                         for (self.router.routes.items) |*route| {
@@ -271,6 +272,32 @@ pub const Server = struct {
                             header_info.requested_resource_type,
                         });
                     },
+                }
+
+                if (header_info.requested_with == .fetchPartial) {
+                    std.log.debug("[http server] fetch partial detected", .{});
+
+                    var target_route: ?*router.RouteDefinition = null;
+                    for (self.router.routes.items) |*route| {
+                        if (header_info.containsOrigin(route.name)) {
+                            target_route = route;
+                            break;
+                        }
+                    }
+
+                    var str_result: []const u8 = undefined;
+                    if (target_route.?.relative_path != null) {
+                        str_result = try std.mem.concat(self.mem_allocator, u8, &.{
+                            target_route.?.relative_path.?,
+                            target,
+                        });
+                    } else {
+                        str_result = target;
+                    }
+
+                    std.log.debug("partial fetch dest: {s}", .{str_result});
+
+                    try handleResource(self, &req, str_result);
                 }
             }
             std.log.err("[http server] could not find route at {s} {s}", .{
