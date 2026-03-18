@@ -1,10 +1,69 @@
 <style>
   .clash {
+    display: flex;
+    flex-direction: column;
 
+    justify-items: center;
+    justify-content: center;
+
+    align-items: center;
+    alignt-content: center;
+
+    width: 100%;
+    height: 100%;
   }
 
   .clash .items {
-    
+    posiion: relative;
+
+    width: 80%;
+
+    display: flex;
+    flex-direction: row;
+
+    gap: 1em;
+  }
+  
+  .clash .items .item {
+    border-radius: 24px;
+    min-width: fit-content;
+    min-height: fit-content;
+    background-color: #778DA9;
+
+    display: flex;
+    flex-direction: column;
+
+    alignt-content: center;
+    alignt-items: center;
+
+    justify-items: center;
+    justify-content: center;
+
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+  }
+
+  .clash .items .item .item-dates {
+    width: 100%;
+  }
+
+  .clash .items .item .item-dates .item-date {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+  }
+
+  .clash .items .item .item-dates .item-date p {
+    width: 100%;
+  }
+
+  .clash .items .item .item-dates .item-date img {
+    height: 2em;
+    width: auto;
   }
 </style>
 
@@ -12,8 +71,21 @@
   <h1>Clash schedule</h1>
 
   <div class="items">
-    <template x-for="schedule in clash_schedules">
-      <h2 x-text="schedule.nameKey"></h2>
+    <template x-for="info in clash_infos">
+      <div class="item">
+        <h2 x-text="getTournamentName(info.theme)"></h2>
+        <h3 x-text="getTournamentDay(info.day)"></h3>
+        <div class="item-dates">
+          <div class="item-date">
+            <img src="gamepad.png"/>
+            <p x-text="getTournamentDate(info.startTime)"></p>
+          </div>
+          <div class="item-date">
+            <img src="trophy.png"/>
+            <p x-text="getTournamentDate(info.registrationTime)"></p>
+          </div>
+        </div>
+      </div>
     </template>
   </div>
 </div>

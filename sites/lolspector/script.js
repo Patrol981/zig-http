@@ -33,6 +33,8 @@ document.addEventListener('alpine:init', () => {
 
   Alpine.data('clash', () => ({
     clash_schedules: [],
+    clash_infos: [],
+
     async init() {
       console.log('[clash] init component');
 
@@ -40,7 +42,9 @@ document.addEventListener('alpine:init', () => {
       const json = await data.json();
 
       this.clash_schedules = json;
+      this.clash_infos = getTournamentInfo(json);
       console.log(this.clash_schedules);
+      console.log(this.clash_infos);
     }
   }));
 

@@ -53,6 +53,15 @@ pub fn defineRoutes(router: *root.router.Router) void {
         },
     };
 
+    const astro_route: root.router.RouteDefinition = .{
+        .name = "/astro",
+        .relative_path = "../../sites/lolspector-astro/dist",
+        .route_type = .Page,
+        .vtable = .{
+            .controller_action = lolspector_astro,
+        },
+    };
+
     const clash_get_schedule_route: root.router.RouteDefinition = .{
         .name = "/clash/schedule",
         .route_type = .Json,
@@ -66,6 +75,7 @@ pub fn defineRoutes(router: *root.router.Router) void {
     router.addRoute(hello_plain_route);
 
     // riot api related
+    router.addRoute(astro_route);
     router.addRoute(lolspector_route);
     router.addRoute(clash_get_schedule_route);
 }
@@ -77,6 +87,21 @@ pub fn lolspector(server: *root.server.Server) []const u8 {
         cwd,
         server.thread_io.io(),
         "../../sites/lolspector/index.html",
+        server.mem_allocator,
+        .unlimited,
+    ) catch {
+        return "Could not read file";
+    };
+    return data;
+}
+
+pub fn lolspector_astro(server: *root.server.Server) []const u8 {
+    const cwd = std.Io.Dir.cwd();
+
+    const data = std.Io.Dir.readFileAlloc(
+        cwd,
+        server.thread_io.io(),
+        "../../sites/lolspector-astro/dist/index.html",
         server.mem_allocator,
         .unlimited,
     ) catch {
