@@ -14,9 +14,12 @@
   "dependencies": {
     "@astrojs/svelte": "^8.0.1",
     "@iconify/svelte": "^5.2.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindplus/elements": "^1.0.22",
     "astro": "^6.0.4",
     "install": "^0.13.0",
     "svelte": "^5.53.12",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

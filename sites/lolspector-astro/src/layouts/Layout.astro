@@ -1,28 +1,31 @@
 ---
-import Navigation from "../components/navigation.svelte";
+import Navigation from "../components/navigation_tailwind.svelte";
+import "../global.css"
 ---
 
 <!doctype html>
-<html lang="en">
+<html class="h-full bg-white dark:bg-gray-900" lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
+
 		<meta name="generator" content={Astro.generator} />
 		<title>Lolspector</title>
 	</head>
-  <body>
-    <Navigation client:load/>
-		<slot />
+  <body class="h-full">
+      <Navigation class="nav" client:load/>
+      <main class="py-10 lg:pl-72">
+        <div class="px-4 sm:px-6 lg:px-8">
+          <slot class="slot" />
+        </div>
+        <script>
+          import '@tailwindplus/elements';
+        </script>
+      </main>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+
+
